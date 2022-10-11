@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!--<input type="file" id="file_upload" />
+    <button id="submit_file">Upload</button>-->
+
+    <h2>This APIs routes are as follows--(Note that all routes are prefixed with '/api')</h2>
+    <h4>Currently, the user part of the api is protected and needs auth while the messages routes can be freely accessed</h4>
+    <h4>Some of the orphanages & donations routes are token protected while others are not</h4>
+    <strong>For the protected routes, one needs to always send the token as Authorization Bearer</strong>
+    <p>To get token(login), send a request with username and password in the body to '/tokens'[POST method]</p>
+    <p>To revoke token, send a request to '/tokens' [DELETE method] with the current token</p>
+    
+    <h3>User stuff</h3>
+    <p>'/users' (GET Method) => for getting all users (you can send 'page' & 'per_page' for pagination)</p>
+    <p>'/users' (POST Method) => for creating a user (doesn't need token) <br/>
+    <strong>Body takes 'username','email','phone_no' and 'password' (All required)</strong></p>
+    
+    <p> '/user/{id}' (GET method) => for getting a user's details</p>
+    <p>'/user/{id}' (PUT method) => for updating a user's details <br/>
+        <strong>Body takes 'username','email','phone_no' and 'password' (Each optional)</strong></p>
+    <p>'/user/{id}' (DELETE method) => for deleting a user from the db</p>
+    
+    <h3>Orphanage details</h3>
+    <p>'/orphanages' (GET Method) => for getting all orphanages' details</p>
+    <p>'/orphanages' (POST Method) => for creating an orphanage <br>
+    <strong>Body takes 'name', 'email', 'students', 'phone_no', 'location', 'activities','paypal_info','social_media_links', 'story', 'money_uses', 'photos_links','bank_info','acttype','actId', 'country', 'good_work',
+        'monthly_donation', 'registration_certificate', 'blog_link'(All required)</strong><br>
+    <ul style="color: red;">
+        <li>'name' and 'email' are strings</li>
+        <li>'students' should be of 'number type' while 'phone_no' is a string of max length 20</li>
+        <li>'location' and 'activities' are of 'long_text type'. Their types can be content written as plain text, html tags,etc</li>
+        <li>'paypal_info' & 'social_media_links' should be JSON objects not string. </li>
+        <li> 'photos_links' should be an array</li>
+        <li>'story','money_uses' & 'bank_info' are also of 'long_text' type</li>
+        <li>'acttype' and 'actId' are of type string. 'acttype' has a max length of 6(stripe/paypal) while 'actId' has a max length of 120 </li>
+        <li>'country' and 'monthly_donation' takes strings of max. length 90</li>
+        <li>'good_work' is of 'long_text type'</li>
+        <li>'registration_certificate' and 'blog_link' are strings of max length 250</li>
+    </ul>
+    </p>
+    <p>'/orphanage/{id}' (GET method) => for getting an orphanage's details</p>
+    <p>'/orphanage/{id}' (PUT method) => for updating an orphanage's details<br>
+        <strong>Body takes same as POST method(Each optional)</strong><br>
+    <strong>Their types are same as above</strong></p>
+    <p>'/orphanage/{id}' (DELETE method) => for deleting an orphanage's details</p>
+
+    <h3>Message/ Contact us details</h3>
+    <p>'/messages' (GET Method) => for getting all messages</p>
+    <p>'/messages' (POST Method) => for sending a message/contact us <br>
+    <strong>Body takes 'first_name', 'last_name','email', 'phone_no' and 'content'(All required)</strong> <br>
+    <span style="color: red;">Their types are 'string' except 'content' which is of 'long_text' type</span></p>
+
+    <h3>Donation details</h3>
+    <p>'/donations'(POST method) => for adding successful donations</p>
+    <p><strong>Body takes 'username','amount' & 'orphanage_name'(All required)</strong></p>
+    <p style="color: red;">For anonymous donations, use the username 'Anonymous'</p>
+    <p>'amount' is a number that should be rounded to 2 decimal places</p>
+    <p>'/orphanage_donations/{id}'(GET method) to get an orphanage's donations. It returns the donations with donation time</p>
+    <p style="color: red;">The donations are returned in the format {
+        'donation_time': (python datetime object) ,
+        'amount': (float),
+        'donor': (string),
+        'recipient_orphanage': (string)
+    }</p>
+
+    <h3>Image details</h3>
+    <p>'/image_upload'(POST method) is for image uploads</p>
+    <p>'/image_delete'(DELETE method) is for image deletion. It returns a message in the format {'deleted_file': filename}</p>
+    <p><strong>Body takes 'filepath' which is a string</strong></p>
+    <p style="color: red;">It requires the token of an admin user to delete images</p>
+
+    <h2>Further notes</h2>
+    <div>
+        All the bulks 'GET' requests('/users', '/orphanages' and '/messages') have the relevant data under "items" as an array of objects.
+        <p>Also, they take optional query strings for pagination, 'page'(for the specific page no - defaults to 1 if not given) and 'per_page'(for the max no of items to return per page- defaults to 10)</p>
+        <p style="color: blue;">e.g "/orphanages?page=1&per_page=10"</p>
+        <p>Let me know if I should remove the pagination for them and instead return all items</p>
+    </div>
+
+    <h2 style="color: blue;">Latest Changes</h2>
+    <div>
+        Added 
+        <ul style="font-size:large;">
+            <li>'country','monthly_donation', 'good_work', 'registration_certificate' and 'blog_link' fields have been added </li>
+        </ul>
+    </div>
+    <script src="{{url_for('static', filename='js/files.js')}}"></script>
+    
+</body>
+</html>

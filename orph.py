@@ -3,6 +3,10 @@ from setup.models import User, Orphanage, Message, Donation
 
 application = create_app()
 
+@application.route('/')
+def home():
+     return redirect('/index.html')
+
 # the decorator below registers the function as a shell context function
 @application.shell_context_processor 
 def make_shell_context():

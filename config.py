@@ -23,6 +23,6 @@ class Config(object):
     POSTS_PER_PAGE = 20
     UPLOAD_FOLDER = os.environ.get("UPLOAD_FOLDER")
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg','gif'}
-    MAX_CONTENT_LENGTH = 500 * 1024 #500 KB
+    MAX_CONTENT_LENGTH = 5000 * 1024 #500 KB
 
 config = Config()

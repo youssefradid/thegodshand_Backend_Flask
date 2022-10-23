@@ -1,7 +1,10 @@
 from setup import create_app, db
 from setup.models import User, Orphanage, Message, Donation
+from flask import Flask,redirect
+from flask_cors import CORS
 
 application = create_app()
+CORS(application)
 
 @application.route('/')
 def home():

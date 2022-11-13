@@ -1,10 +1,11 @@
-from flask import jsonify, request, url_for
+from flask import jsonify, request, url_for, current_app
 from setup.models import User, Orphanage, Message, Donation
 from setup.api import bp
 from setup import db
 from setup.api.errors import bad_request, error_response
 from setup.api.auth import token_auth
 from setup.api.tokens import save_file, delete_file
+import logging
 
 @bp.route('/user/<int:id>', methods=['GET'])
 @token_auth.login_required
@@ -42,9 +43,11 @@ def create_user():
 @bp.route('/user/<int:id>', methods=['PUT'])
 @token_auth.login_required
 def update_user(id):
+    current_app.logger.info(id)
     if token_auth.current_user().id != id:
         return error_response(403, "You are not allowed to edit another user's data")
     user = User.query.get_or_404(id)
+    current_app.logger.info(user)
     data = request.get_json() or {}
     if 'username' in data and data['username'] != user.username and \
         User.query.filter_by(username=data['username']).first():
@@ -72,6 +75,8 @@ def get_orphanages():
     page = request.args.get('page', 1, type=int)
     per_page = min(request.args.get('per_page', 100, type=int), 100)
     orphs = Orphanage.to_collection_dict(Orphanage.query, page, per_page, 'api.get_orphanages')# under items
+    current_app.logger.setLevel(logging.INFO)
+    current_app.logger.info(orphs)
     return jsonify(orphs)
 
 @bp.route('/orphanages', methods=['POST'])
